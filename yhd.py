@@ -40,8 +40,9 @@ def main():
             if len(line) == 0:
                 continue
             line = line.decode('utf-8','ignore')
-            if(++count % 10 == 0):
-                sys.stderr.write("Doing %d %s\n" % count,line.encode('utf-8'))
+            count += 1
+            if(count % 10 == 0):
+                sys.stderr.write("Doing %d %s\n" % (count,line.encode('utf-8')))
             words = getYHD(line)
             for word in words:
                 print word.encode('utf-8','ignore')
