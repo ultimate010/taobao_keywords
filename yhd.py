@@ -11,7 +11,7 @@ YHD_REQ_URL = 'http://www.yhd.com/ctg/get_new_keywords.do'
 YHDXPATH = '//ul[1]/li/a/span/text()'
 
 def getYHD(word,retry = 3):
-    time.sleep(1)
+    time.sleep(3)
     if --retry > 0:
         par = {'keyword' : word }
         try:
@@ -25,7 +25,7 @@ def getYHD(word,retry = 3):
             for word in html_words:
                 yield word
         except Exception as err:
-            sys.stderr.write("ERR:%s " % err)
+            sys.stderr.write("ERR:%s " % err.encode('utf-8'))
     else:
         sys.stderr.write("Get %s wrong" % word.encode('utf-8','ignore'))
 
@@ -33,12 +33,16 @@ def main():
     if len(sys.argv) != 2:
         print "Usage :python %s querryFile 1> outFile 2> logFile" % sys.argv[0]
         exit(1)
+    count = 0
     with open(sys.argv[1],'r') as myInput:
         for line in myInput:
             line = line.strip('\r\n')
             if len(line) == 0:
                 continue
-            words = getYHD(line.decode('utf-8','ignore'))
+            line = line.decode('utf-8','ignore')
+            if(++count % 10 == 0):
+                sys.stderr.write("Doing %d %s\n" % count,line.encode('utf-8'))
+            words = getYHD(line)
             for word in words:
                 print word.encode('utf-8','ignore')
 
