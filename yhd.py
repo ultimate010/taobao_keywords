@@ -20,19 +20,18 @@ def getYHD(word,retry = 3):
             if req.status_code != requests.codes.ok:
                 yield getYHD(word,--retry)
             ans = req.json()[u'value']
-            #print ans.encode('utf-8')
             dom_words = H.fromstring(ans)
             html_words = dom_words.xpath(YHDXPATH)
             for word in html_words:
                 yield word
         except Exception as err:
-            sys.stderr.write("ERR:%s " % err.encode('utf-8'))
+            sys.stderr.write("%s:ERR:%s " % (datetime.datetime.now(),err))
     else:
-        sys.stderr.write("Get %s wrong" % word.encode('utf-8','ignore'))
+        sys.stderr.write("%s:Get %s wrong" % (datetime.datetime.now(),word.encode('utf-8','ignore')))
 
 def main():
-    if len(sys.argv) != 2:
-        print "Usage :python %s querryFile 1> outFile 2> logFile" % sys.argv[0]
+    if len(sys.argv) != 3:
+        print "Usage :python %s querryFile skipNum 1> outFile 2> logFile" % sys.argv[0]
         exit(1)
     count = 0
     with open(sys.argv[1],'r') as myInput:
@@ -42,12 +41,16 @@ def main():
                 continue
             line = line.decode('utf-8','ignore')
             count += 1
+            if(count < int(sys.argv[2])):
+                continue
             if(count % 10 == 0):
                 sys.stderr.write("%s:Doing %d %s\n" % (datetime.datetime.now(),count,line.encode('utf-8')))
-            words = getYHD(line)
-            for word in words:
-                print word.encode('utf-8','ignore')
-
+            try:
+                words = getYHD(line)
+                for word in words:
+                    print word.encode('utf-8','ignore')
+            except Exception as err:
+                sys.stderr.write("%s:ERR:%s " % (datetime.datetime.now(),err))
 
 
 if __name__ == "__main__":
