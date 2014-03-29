@@ -16,7 +16,7 @@ def getTaobao(word,retry = 3):
     if --retry > 0:
        try:
             par = {'code' : 'utf-8', 'q' : word }
-            req = requests.get(TAOBAO_REQ_URL,params = par)
+            req = requests.get(TAOBAO_REQ_URL,params = par,timeout = 5)
             if req.status_code != requests.codes.ok:
                 yield getTaobao(word,--retry)
             ans = req.json()[u'result']

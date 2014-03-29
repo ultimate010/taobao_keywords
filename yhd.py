@@ -16,7 +16,7 @@ def getYHD(word,retry = 3):
     if --retry > 0:
         par = {'keyword' : word }
         try:
-            req = requests.get(YHD_REQ_URL,params = par)
+            req = requests.get(YHD_REQ_URL,params = par,timeout = 5)
             if req.status_code != requests.codes.ok:
                 yield getYHD(word,--retry)
             ans = req.json()[u'value']
