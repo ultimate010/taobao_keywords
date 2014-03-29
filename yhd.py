@@ -4,6 +4,7 @@
 import requests
 import sys
 import time
+import datetime
 import lxml.html as H
 
 TAOBAO_REQ_URL = 'http://suggest.taobao.com/sug'
@@ -42,7 +43,7 @@ def main():
             line = line.decode('utf-8','ignore')
             count += 1
             if(count % 10 == 0):
-                sys.stderr.write("Doing %d %s\n" % (count,line.encode('utf-8')))
+                sys.stderr.write("%s:Doing %d %s\n" % (datetime.datetime.now(),count,line.encode('utf-8')))
             words = getYHD(line)
             for word in words:
                 print word.encode('utf-8','ignore')
